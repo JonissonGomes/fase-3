@@ -1,0 +1,1300 @@
+{
+	"info": {
+		"_postman_id": "revenda-veiculos-api",
+		"name": "Revenda Veículos API",
+		"description": "Collection completa da API da plataforma de revenda de veículos com todos os microserviços (Auth, Vehicles, Orders)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "revenda-veiculos"
+	},
+	"item": [
+		{
+			"name": "Auth Service",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{auth_base_url}}/health",
+							"host": [
+								"{{auth_base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Verificar status do serviço de autenticação"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@revenda.com\",\n  \"senha\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{auth_base_url}}/auth/login",
+							"host": [
+								"{{auth_base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Autenticar usuário e obter token JWT"
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('auth_token', response.token);",
+									"    pm.environment.set('user_id', response.usuario.id);",
+									"    pm.environment.set('user_perfil', response.usuario.perfil);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Login Cliente",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"cliente@revenda.com\",\n  \"senha\": \"cliente123\"\n}"
+						},
+						"url": {
+							"raw": "{{auth_base_url}}/auth/login",
+							"host": [
+								"{{auth_base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login com usuário cliente"
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('cliente_token', response.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Login Vendedor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"vendedor@revenda.com\",\n  \"senha\": \"vendedor123\"\n}"
+						},
+						"url": {
+							"raw": "{{auth_base_url}}/auth/login",
+							"host": [
+								"{{auth_base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login com usuário vendedor"
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('vendedor_token', response.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Registrar Usuário (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao@email.com\",\n  \"senha\": \"senha123\",\n  \"cpf\": \"123.456.789-00\",\n  \"perfil\": \"Cliente\"\n}"
+						},
+						"url": {
+							"raw": "{{auth_base_url}}/auth/register",
+							"host": [
+								"{{auth_base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						},
+						"description": "Cadastrar novo usuário (apenas Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Meus Dados",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{auth_base_url}}/auth/me",
+							"host": [
+								"{{auth_base_url}}"
+							],
+							"path": [
+								"auth",
+								"me"
+							]
+						},
+						"description": "Obter dados do usuário logado"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Usuários (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{auth_base_url}}/auth/users?pagina=1&limite=10&perfil=Cliente&ativo=true&busca=joao",
+							"host": [
+								"{{auth_base_url}}"
+							],
+							"path": [
+								"auth",
+								"users"
+							],
+							"query": [
+								{
+									"key": "pagina",
+									"value": "1"
+								},
+								{
+									"key": "limite",
+									"value": "10"
+								},
+								{
+									"key": "perfil",
+									"value": "Cliente"
+								},
+								{
+									"key": "ativo",
+									"value": "true"
+								},
+								{
+									"key": "busca",
+									"value": "joao"
+								}
+							]
+						},
+						"description": "Listar usuários com filtros (apenas Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Usuário",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"João Silva Atualizado\",\n  \"email\": \"joao.novo@email.com\"\n}"
+						},
+						"url": {
+							"raw": "{{auth_base_url}}/auth/users/{{user_id}}",
+							"host": [
+								"{{auth_base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"{{user_id}}"
+							]
+						},
+						"description": "Atualizar dados do usuário"
+					},
+					"response": []
+				},
+				{
+					"name": "Desativar Usuário (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{auth_base_url}}/auth/users/{{user_id}}",
+							"host": [
+								"{{auth_base_url}}"
+							],
+							"path": [
+								"auth",
+								"users",
+								"{{user_id}}"
+							]
+						},
+						"description": "Desativar usuário (apenas Admin)"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints do serviço de autenticação e gerenciamento de usuários"
+		},
+		{
+			"name": "Vehicles Service",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_base_url}}/health",
+							"host": [
+								"{{vehicles_base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Verificar status do serviço de veículos"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Veículos (Público)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_base_url}}/vehicles?pagina=1&limite=10&marca=Toyota&anoMin=2020&precoMax=100000&ordenacao=preco",
+							"host": [
+								"{{vehicles_base_url}}"
+							],
+							"path": [
+								"vehicles"
+							],
+							"query": [
+								{
+									"key": "pagina",
+									"value": "1"
+								},
+								{
+									"key": "limite",
+									"value": "10"
+								},
+								{
+									"key": "marca",
+									"value": "Toyota"
+								},
+								{
+									"key": "anoMin",
+									"value": "2020"
+								},
+								{
+									"key": "precoMax",
+									"value": "100000"
+								},
+								{
+									"key": "ordenacao",
+									"value": "preco"
+								}
+							]
+						},
+						"description": "Listar veículos à venda com filtros"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Veículo por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{vehicles_base_url}}/vehicles/{{vehicle_id}}",
+							"host": [
+								"{{vehicles_base_url}}"
+							],
+							"path": [
+								"vehicles",
+								"{{vehicle_id}}"
+							]
+						},
+						"description": "Buscar veículo específico por ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Veículo (Vendedor/Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{vendedor_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"marca\": \"Toyota\",\n  \"modelo\": \"Corolla\",\n  \"ano\": 2020,\n  \"cor\": \"Prata\",\n  \"preco\": 85000,\n  \"descricao\": \"Veículo em excelente estado, revisado\",\n  \"quilometragem\": 45000,\n  \"combustivel\": \"Flex\",\n  \"transmissao\": \"Automático\",\n  \"imagens\": [\n    \"https://example.com/imagem1.jpg\",\n    \"https://example.com/imagem2.jpg\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{vehicles_base_url}}/vehicles",
+							"host": [
+								"{{vehicles_base_url}}"
+							],
+							"path": [
+								"vehicles"
+							]
+						},
+						"description": "Criar novo veículo (Vendedor/Admin)"
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('vehicle_id', response.veiculo.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Atualizar Veículo",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{vendedor_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"preco\": 82000,\n  \"descricao\": \"Veículo em excelente estado, revisado e com garantia\",\n  \"quilometragem\": 46000\n}"
+						},
+						"url": {
+							"raw": "{{vehicles_base_url}}/vehicles/{{vehicle_id}}",
+							"host": [
+								"{{vehicles_base_url}}"
+							],
+							"path": [
+								"vehicles",
+								"{{vehicle_id}}"
+							]
+						},
+						"description": "Atualizar veículo (Vendedor do veículo/Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Remover Veículo",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{vendedor_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{vehicles_base_url}}/vehicles/{{vehicle_id}}",
+							"host": [
+								"{{vehicles_base_url}}"
+							],
+							"path": [
+								"vehicles",
+								"{{vehicle_id}}"
+							]
+						},
+						"description": "Remover veículo (Vendedor do veículo/Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Veículos Vendidos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{vendedor_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{vehicles_base_url}}/vehicles/sold?pagina=1&limite=10",
+							"host": [
+								"{{vehicles_base_url}}"
+							],
+							"path": [
+								"vehicles",
+								"sold"
+							],
+							"query": [
+								{
+									"key": "pagina",
+									"value": "1"
+								},
+								{
+									"key": "limite",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Listar veículos vendidos (Vendedor/Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Meus Veículos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{vendedor_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{vehicles_base_url}}/vehicles/my?pagina=1&limite=10",
+							"host": [
+								"{{vehicles_base_url}}"
+							],
+							"path": [
+								"vehicles",
+								"my"
+							],
+							"query": [
+								{
+									"key": "pagina",
+									"value": "1"
+								},
+								{
+									"key": "limite",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Listar meus veículos (Vendedor/Admin)"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints do serviço de gerenciamento de veículos"
+		},
+		{
+			"name": "Orders Service",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{orders_base_url}}/health",
+							"host": [
+								"{{orders_base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Verificar status do serviço de pedidos"
+					},
+					"response": []
+				},
+				{
+					"name": "Criar Pedido (Cliente/Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{cliente_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"veiculoId\": \"{{vehicle_id}}\",\n  \"precoFinal\": 85000,\n  \"observacoes\": \"Interessado em financiamento\",\n  \"metodoPagamento\": \"cartao_credito\",\n  \"parcelas\": 12,\n  \"valorParcela\": 7083.33\n}"
+						},
+						"url": {
+							"raw": "{{orders_base_url}}/orders",
+							"host": [
+								"{{orders_base_url}}"
+							],
+							"path": [
+								"orders"
+							]
+						},
+						"description": "Criar novo pedido de compra"
+					},
+					"response": [],
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    pm.environment.set('order_id', response.pedido.id);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					]
+				},
+				{
+					"name": "Meus Pedidos",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{cliente_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{orders_base_url}}/orders?pagina=1&limite=10&status=pending",
+							"host": [
+								"{{orders_base_url}}"
+							],
+							"path": [
+								"orders"
+							],
+							"query": [
+								{
+									"key": "pagina",
+									"value": "1"
+								},
+								{
+									"key": "limite",
+									"value": "10"
+								},
+								{
+									"key": "status",
+									"value": "pending"
+								}
+							]
+						},
+						"description": "Listar meus pedidos (Cliente/Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Pedidos Recebidos (Vendedor)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{vendedor_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{orders_base_url}}/orders/vendor?pagina=1&limite=10",
+							"host": [
+								"{{orders_base_url}}"
+							],
+							"path": [
+								"orders",
+								"vendor"
+							],
+							"query": [
+								{
+									"key": "pagina",
+									"value": "1"
+								},
+								{
+									"key": "limite",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Listar pedidos recebidos (Vendedor/Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Pedido por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{cliente_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{orders_base_url}}/orders/{{order_id}}",
+							"host": [
+								"{{orders_base_url}}"
+							],
+							"path": [
+								"orders",
+								"{{order_id}}"
+							]
+						},
+						"description": "Buscar pedido específico"
+					},
+					"response": []
+				},
+				{
+					"name": "Aprovar Pedido (Vendedor/Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{vendedor_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{orders_base_url}}/orders/{{order_id}}/approve",
+							"host": [
+								"{{orders_base_url}}"
+							],
+							"path": [
+								"orders",
+								"{{order_id}}",
+								"approve"
+							]
+						},
+						"description": "Aprovar pedido (Vendedor/Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Rejeitar Pedido (Vendedor/Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{vendedor_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"observacoes\": \"Veículo já foi vendido para outro cliente\"\n}"
+						},
+						"url": {
+							"raw": "{{orders_base_url}}/orders/{{order_id}}/reject",
+							"host": [
+								"{{orders_base_url}}"
+							],
+							"path": [
+								"orders",
+								"{{order_id}}",
+								"reject"
+							]
+						},
+						"description": "Rejeitar pedido (Vendedor/Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Concluir Pedido (Vendedor/Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{vendedor_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{orders_base_url}}/orders/{{order_id}}/complete",
+							"host": [
+								"{{orders_base_url}}"
+							],
+							"path": [
+								"orders",
+								"{{order_id}}",
+								"complete"
+							]
+						},
+						"description": "Concluir pedido (Vendedor/Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Cancelar Pedido (Cliente/Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{cliente_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"observacoes\": \"Mudei de ideia sobre a compra\"\n}"
+						},
+						"url": {
+							"raw": "{{orders_base_url}}/orders/{{order_id}}/cancel",
+							"host": [
+								"{{orders_base_url}}"
+							],
+							"path": [
+								"orders",
+								"{{order_id}}",
+								"cancel"
+							]
+						},
+						"description": "Cancelar pedido (Cliente/Admin)"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints do serviço de gerenciamento de pedidos"
+		},
+		{
+			"name": "Fluxos de Teste",
+			"item": [
+				{
+					"name": "Fluxo Completo de Compra",
+					"item": [
+						{
+							"name": "1. Login Cliente",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"cliente@revenda.com\",\n  \"senha\": \"cliente123\"\n}"
+								},
+								"url": {
+									"raw": "{{auth_base_url}}/auth/login",
+									"host": [
+										"{{auth_base_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								},
+								"description": "Primeiro passo: Login do cliente"
+							},
+							"response": [],
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('cliente_token', response.token);",
+											"    console.log('Cliente logado com sucesso');",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							]
+						},
+						{
+							"name": "2. Listar Veículos Disponíveis",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{vehicles_base_url}}/vehicles?limite=5",
+									"host": [
+										"{{vehicles_base_url}}"
+									],
+									"path": [
+										"vehicles"
+									],
+									"query": [
+										{
+											"key": "limite",
+											"value": "5"
+										}
+									]
+								},
+								"description": "Segundo passo: Ver veículos disponíveis"
+							},
+							"response": [],
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    const response = pm.response.json();",
+											"    if (response.veiculos && response.veiculos.length > 0) {",
+											"        pm.environment.set('vehicle_id', response.veiculos[0].id);",
+											"        console.log('Veículo selecionado:', response.veiculos[0].marca, response.veiculos[0].modelo);",
+											"    }",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							]
+						},
+						{
+							"name": "3. Criar Pedido",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{cliente_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"veiculoId\": \"{{vehicle_id}}\",\n  \"precoFinal\": 85000,\n  \"observacoes\": \"Interessado em financiamento\",\n  \"metodoPagamento\": \"cartao_credito\",\n  \"parcelas\": 12,\n  \"valorParcela\": 7083.33\n}"
+								},
+								"url": {
+									"raw": "{{orders_base_url}}/orders",
+									"host": [
+										"{{orders_base_url}}"
+									],
+									"path": [
+										"orders"
+									]
+								},
+								"description": "Terceiro passo: Criar pedido de compra"
+							},
+							"response": [],
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('order_id', response.pedido.id);",
+											"    console.log('Pedido criado com sucesso');",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							]
+						},
+						{
+							"name": "4. Login Vendedor",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"vendedor@revenda.com\",\n  \"senha\": \"vendedor123\"\n}"
+								},
+								"url": {
+									"raw": "{{auth_base_url}}/auth/login",
+									"host": [
+										"{{auth_base_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								},
+								"description": "Quarto passo: Login do vendedor"
+							},
+							"response": [],
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('vendedor_token', response.token);",
+											"    console.log('Vendedor logado com sucesso');",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							]
+						},
+						{
+							"name": "5. Aprovar Pedido",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{vendedor_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{orders_base_url}}/orders/{{order_id}}/approve",
+									"host": [
+										"{{orders_base_url}}"
+									],
+									"path": [
+										"orders",
+										"{{order_id}}",
+										"approve"
+									]
+								},
+								"description": "Quinto passo: Vendedor aprova o pedido"
+							},
+							"response": [],
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    console.log('Pedido aprovado com sucesso');",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							]
+						}
+					],
+					"description": "Fluxo completo de compra de veículo"
+				},
+				{
+					"name": "Fluxo de Gerenciamento de Veículos",
+					"item": [
+						{
+							"name": "1. Login Vendedor",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"vendedor@revenda.com\",\n  \"senha\": \"vendedor123\"\n}"
+								},
+								"url": {
+									"raw": "{{auth_base_url}}/auth/login",
+									"host": [
+										"{{auth_base_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								},
+								"description": "Primeiro passo: Login do vendedor"
+							},
+							"response": [],
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('vendedor_token', response.token);",
+											"    console.log('Vendedor logado com sucesso');",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							]
+						},
+						{
+							"name": "2. Criar Veículo",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{vendedor_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"marca\": \"Honda\",\n  \"modelo\": \"Civic\",\n  \"ano\": 2021,\n  \"cor\": \"Branco\",\n  \"preco\": 95000,\n  \"descricao\": \"Veículo seminovo, único dono\",\n  \"quilometragem\": 35000,\n  \"combustivel\": \"Flex\",\n  \"transmissao\": \"Automático\"\n}"
+								},
+								"url": {
+									"raw": "{{vehicles_base_url}}/vehicles",
+									"host": [
+										"{{vehicles_base_url}}"
+									],
+									"path": [
+										"vehicles"
+									]
+								},
+								"description": "Segundo passo: Criar novo veículo"
+							},
+							"response": [],
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('vehicle_id', response.veiculo.id);",
+											"    console.log('Veículo criado com sucesso');",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							]
+						},
+						{
+							"name": "3. Listar Meus Veículos",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{vendedor_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{vehicles_base_url}}/vehicles/my",
+									"host": [
+										"{{vehicles_base_url}}"
+									],
+									"path": [
+										"vehicles",
+										"my"
+									]
+								},
+								"description": "Terceiro passo: Ver meus veículos"
+							},
+							"response": []
+						},
+						{
+							"name": "4. Atualizar Veículo",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{vendedor_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"preco\": 92000,\n  \"descricao\": \"Veículo seminovo, único dono, com garantia\"\n}"
+								},
+								"url": {
+									"raw": "{{vehicles_base_url}}/vehicles/{{vehicle_id}}",
+									"host": [
+										"{{vehicles_base_url}}"
+									],
+									"path": [
+										"vehicles",
+										"{{vehicle_id}}"
+									]
+								},
+								"description": "Quarto passo: Atualizar veículo"
+							},
+							"response": []
+						}
+					],
+					"description": "Fluxo de gerenciamento de veículos pelo vendedor"
+				}
+			],
+			"description": "Fluxos de teste pré-configurados para cenários comuns"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "auth_base_url",
+			"value": "http://localhost:3001",
+			"type": "string"
+		},
+		{
+			"key": "vehicles_base_url",
+			"value": "http://localhost:3002",
+			"type": "string"
+		},
+		{
+			"key": "orders_base_url",
+			"value": "http://localhost:3003",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "cliente_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "vendedor_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "vehicle_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "order_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+} 
