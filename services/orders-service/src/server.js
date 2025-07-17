@@ -92,6 +92,25 @@ app.listen(PORT, () => {
   logger.info(`Serviço de pedidos rodando na porta ${PORT}`);
   logger.info(`Ambiente: ${process.env.NODE_ENV || 'development'}`);
   logger.info(`CORS Origin: ${corsOrigin}`);
+  
+  // Mostrar todas as rotas disponíveis
+  const baseUrl = process.env.RENDER_EXTERNAL_URL || `https://fase-3-orders-service.onrender.com`;
+  console.log('\n📦 ORDERS SERVICE - ROTAS DISPONÍVEIS:');
+  console.log('=======================================');
+  console.log('GET    ' + baseUrl + '/health');
+  console.log('POST   ' + baseUrl + '/orders');
+  console.log('GET    ' + baseUrl + '/orders');
+  console.log('GET    ' + baseUrl + '/orders/vendor');
+  console.log('GET    ' + baseUrl + '/orders/:id');
+  console.log('PUT    ' + baseUrl + '/orders/:id/approve');
+  console.log('PUT    ' + baseUrl + '/orders/:id/reject');
+  console.log('PUT    ' + baseUrl + '/orders/:id/complete');
+  console.log('PUT    ' + baseUrl + '/orders/:id/cancel');
+  console.log('=======================================');
+  console.log(`🌐 URL Base: ${baseUrl}`);
+  console.log(`🔧 Ambiente: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔒 CORS: ${corsOrigin}`);
+  console.log('=======================================\n');
 });
 
 // Tratamento de sinais para graceful shutdown

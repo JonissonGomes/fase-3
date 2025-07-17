@@ -92,6 +92,24 @@ app.listen(PORT, () => {
   logger.info(`Serviço de veículos rodando na porta ${PORT}`);
   logger.info(`Ambiente: ${process.env.NODE_ENV || 'development'}`);
   logger.info(`CORS Origin: ${corsOrigin}`);
+  
+  // Mostrar todas as rotas disponíveis
+  const baseUrl = process.env.RENDER_EXTERNAL_URL || `https://fase-3-vehicles-service.onrender.com`;
+  console.log('\n🚗 VEHICLES SERVICE - ROTAS DISPONÍVEIS:');
+  console.log('=========================================');
+  console.log('GET    ' + baseUrl + '/health');
+  console.log('GET    ' + baseUrl + '/vehicles');
+  console.log('GET    ' + baseUrl + '/vehicles/:id');
+  console.log('POST   ' + baseUrl + '/vehicles');
+  console.log('PUT    ' + baseUrl + '/vehicles/:id');
+  console.log('DELETE ' + baseUrl + '/vehicles/:id');
+  console.log('GET    ' + baseUrl + '/vehicles/sold');
+  console.log('GET    ' + baseUrl + '/vehicles/my');
+  console.log('=========================================');
+  console.log(`🌐 URL Base: ${baseUrl}`);
+  console.log(`🔧 Ambiente: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔒 CORS: ${corsOrigin}`);
+  console.log('=========================================\n');
 });
 
 // Tratamento de sinais para graceful shutdown

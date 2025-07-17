@@ -93,6 +93,23 @@ app.listen(PORT, () => {
   logger.info(`Serviço de autenticação rodando na porta ${PORT}`);
   logger.info(`Ambiente: ${process.env.NODE_ENV || 'development'}`);
   logger.info(`CORS Origin: ${corsOrigin}`);
+  
+  // Mostrar todas as rotas disponíveis
+  const baseUrl = process.env.RENDER_EXTERNAL_URL || `https://fase-3-auth-service.onrender.com`;
+  console.log('\n🚀 AUTH SERVICE - ROTAS DISPONÍVEIS:');
+  console.log('=====================================');
+  console.log('GET    ' + baseUrl + '/health');
+  console.log('POST   ' + baseUrl + '/auth/login');
+  console.log('POST   ' + baseUrl + '/auth/register');
+  console.log('GET    ' + baseUrl + '/auth/me');
+  console.log('GET    ' + baseUrl + '/auth/users');
+  console.log('PUT    ' + baseUrl + '/auth/users/:id');
+  console.log('DELETE ' + baseUrl + '/auth/users/:id');
+  console.log('=====================================');
+  console.log(`🌐 URL Base: ${baseUrl}`);
+  console.log(`🔧 Ambiente: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`🔒 CORS: ${corsOrigin}`);
+  console.log('=====================================\n');
 });
 
 // Tratamento de sinais para graceful shutdown
