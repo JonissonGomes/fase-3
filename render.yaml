@@ -1,8 +1,3 @@
-databases:
-  - name: revenda-mongodb
-    databaseName: revenda_veiculos
-    user: revenda_user
-
 services:
   # Auth Service
   - type: web
@@ -19,9 +14,7 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: MONGODB_URI
-        fromDatabase:
-          name: revenda-mongodb
-          property: connectionString
+        sync: false
       - key: FRONTEND_URL
         value: https://fase-3.vercel.app
       - key: LOG_LEVEL
@@ -45,9 +38,7 @@ services:
           name: fase-3-auth-service
           envVarKey: JWT_SECRET
       - key: MONGODB_URI
-        fromDatabase:
-          name: revenda-mongodb
-          property: connectionString
+        sync: false
       - key: FRONTEND_URL
         value: https://fase-3.vercel.app
       - key: LOG_LEVEL
@@ -71,9 +62,7 @@ services:
           name: fase-3-auth-service
           envVarKey: JWT_SECRET
       - key: MONGODB_URI
-        fromDatabase:
-          name: revenda-mongodb
-          property: connectionString
+        sync: false
       - key: VEHICLES_SERVICE_URL
         value: https://fase-3.onrender.com
       - key: FRONTEND_URL
