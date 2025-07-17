@@ -6,7 +6,7 @@ databases:
 services:
   # Auth Service
   - type: web
-    name: revenda-auth-service
+    name: fase-3-auth-service
     env: node
     plan: free
     buildCommand: cd services/auth-service && npm ci --only=production
@@ -23,13 +23,13 @@ services:
           name: revenda-mongodb
           property: connectionString
       - key: FRONTEND_URL
-        value: https://revenda-veiculos.vercel.app
+        value: https://fase-3.vercel.app
       - key: LOG_LEVEL
         value: info
 
   # Vehicles Service
   - type: web
-    name: revenda-vehicles-service
+    name: fase-3-vehicles-service
     env: node
     plan: free
     buildCommand: cd services/vehicles-service && npm ci --only=production
@@ -49,13 +49,13 @@ services:
           name: revenda-mongodb
           property: connectionString
       - key: FRONTEND_URL
-        value: https://revenda-veiculos.vercel.app
+        value: https://fase-3.vercel.app
       - key: LOG_LEVEL
         value: info
 
   # Orders Service
   - type: web
-    name: revenda-orders-service
+    name: fase-3-orders-service
     env: node
     plan: free
     buildCommand: cd services/orders-service && npm ci --only=production
@@ -75,11 +75,8 @@ services:
           name: revenda-mongodb
           property: connectionString
       - key: VEHICLES_SERVICE_URL
-        fromService:
-          type: web
-          name: revenda-vehicles-service
-          envVarKey: RENDER_EXTERNAL_URL
+        value: https://fase-3.onrender.com
       - key: FRONTEND_URL
-        value: https://revenda-veiculos.vercel.app
+        value: https://fase-3.vercel.app
       - key: LOG_LEVEL
         value: info 

@@ -48,9 +48,9 @@ frontend/
 ```javascript
 // src/services/api.js
 const API_BASE_URLS = {
-  auth: process.env.REACT_APP_AUTH_SERVICE_URL || 'https://revenda-auth-service.onrender.com',
-  vehicles: process.env.REACT_APP_VEHICLES_SERVICE_URL || 'https://revenda-vehicles-service.onrender.com',
-  orders: process.env.REACT_APP_ORDERS_SERVICE_URL || 'https://revenda-orders-service.onrender.com'
+  auth: process.env.REACT_APP_AUTH_SERVICE_URL || 'https://fase-3.onrender.com',
+  vehicles: process.env.REACT_APP_VEHICLES_SERVICE_URL || 'https://fase-3.onrender.com',
+  orders: process.env.REACT_APP_ORDERS_SERVICE_URL || 'https://fase-3.onrender.com'
 };
 
 export const api = {
@@ -121,9 +121,9 @@ export const api = {
     }
   ],
   "env": {
-    "REACT_APP_AUTH_SERVICE_URL": "https://revenda-auth-service.onrender.com",
-    "REACT_APP_VEHICLES_SERVICE_URL": "https://revenda-vehicles-service.onrender.com",
-    "REACT_APP_ORDERS_SERVICE_URL": "https://revenda-orders-service.onrender.com"
+    "REACT_APP_AUTH_SERVICE_URL": "https://fase-3.onrender.com",
+    "REACT_APP_VEHICLES_SERVICE_URL": "https://fase-3.onrender.com",
+    "REACT_APP_ORDERS_SERVICE_URL": "https://fase-3.onrender.com"
   }
 }
 ```
@@ -137,9 +137,9 @@ REACT_APP_VEHICLES_SERVICE_URL=http://localhost:3002
 REACT_APP_ORDERS_SERVICE_URL=http://localhost:3003
 
 # .env.production (produção)
-REACT_APP_AUTH_SERVICE_URL=https://revenda-auth-service.onrender.com
-REACT_APP_VEHICLES_SERVICE_URL=https://revenda-vehicles-service.onrender.com
-REACT_APP_ORDERS_SERVICE_URL=https://revenda-orders-service.onrender.com
+REACT_APP_AUTH_SERVICE_URL=https://fase-3.onrender.com
+REACT_APP_VEHICLES_SERVICE_URL=https://fase-3.onrender.com
+REACT_APP_ORDERS_SERVICE_URL=https://fase-3.onrender.com
 ```
 
 ## 🚀 Deploy na Vercel
@@ -177,17 +177,17 @@ vercel --prod
 1. **Conecte o repositório na Vercel**
 2. **Configure as variáveis de ambiente**:
    ```
-   REACT_APP_AUTH_SERVICE_URL=https://revenda-auth-service.onrender.com
-   REACT_APP_VEHICLES_SERVICE_URL=https://revenda-vehicles-service.onrender.com
-   REACT_APP_ORDERS_SERVICE_URL=https://revenda-orders-service.onrender.com
+   REACT_APP_AUTH_SERVICE_URL=https://fase-3.onrender.com
+   REACT_APP_VEHICLES_SERVICE_URL=https://fase-3.onrender.com
+   REACT_APP_ORDERS_SERVICE_URL=https://fase-3.onrender.com
    ```
 3. **Cada push no GitHub fará deploy automático**
 
 ## 🔗 URLs e Domínios
 
 ### URLs Padrão
-- **Desenvolvimento**: `https://revenda-veiculos-git-main-seu-usuario.vercel.app`
-- **Produção**: `https://revenda-veiculos.vercel.app`
+- **Desenvolvimento**: `https://fase-3-git-main-seu-usuario.vercel.app`
+- **Produção**: `https://fase-3.vercel.app`
 
 ### Domínio Personalizado
 1. **Compre um domínio** (ex: `revenda-veiculos.com`)
@@ -205,9 +205,9 @@ npm run build
 ### 2. Testar APIs
 ```bash
 # Testar se as APIs estão acessíveis
-curl https://revenda-auth-service.onrender.com/health
-curl https://revenda-vehicles-service.onrender.com/health
-curl https://revenda-orders-service.onrender.com/health
+curl https://fase-3.onrender.com/health
+curl https://fase-3.onrender.com/health
+curl https://fase-3.onrender.com/health
 ```
 
 ### 3. Testar Frontend
@@ -225,8 +225,8 @@ Certifique-se de que o CORS está configurado nos microserviços:
 // Nos serviços backend
 app.use(cors({
   origin: [
-    'https://revenda-veiculos.vercel.app',
-    'https://revenda-veiculos-git-main-seu-usuario.vercel.app',
+    'https://fase-3.vercel.app',
+    'https://fase-3-git-main-seu-usuario.vercel.app',
     'http://localhost:3000' // desenvolvimento
   ],
   credentials: true
@@ -239,9 +239,9 @@ No dashboard da Vercel:
 1. **Settings** → **Environment Variables**
 2. **Adicione as variáveis**:
    ```
-   REACT_APP_AUTH_SERVICE_URL=https://revenda-auth-service.onrender.com
-   REACT_APP_VEHICLES_SERVICE_URL=https://revenda-vehicles-service.onrender.com
-   REACT_APP_ORDERS_SERVICE_URL=https://revenda-orders-service.onrender.com
+   REACT_APP_AUTH_SERVICE_URL=https://fase-3.onrender.com
+   REACT_APP_VEHICLES_SERVICE_URL=https://fase-3.onrender.com
+   REACT_APP_ORDERS_SERVICE_URL=https://fase-3.onrender.com
    ```
 
 ### 3. Preview Deployments

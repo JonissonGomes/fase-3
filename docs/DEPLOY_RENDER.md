@@ -77,7 +77,7 @@ O Render usará as configurações do `render.yaml`, mas você pode ajustar:
    PORT=10000
    JWT_SECRET=sua_chave_jwt_super_secreta
    MONGODB_URI=mongodb+srv://usuario:senha@cluster0.xxxxx.mongodb.net/auth_service?retryWrites=true&w=majority
-       FRONTEND_URL=https://revenda-veiculos.vercel.app
+       FRONTEND_URL=https://fase-3.vercel.app
     LOG_LEVEL=info
   ```
 
@@ -93,7 +93,7 @@ O Render usará as configurações do `render.yaml`, mas você pode ajustar:
    PORT=10000
    JWT_SECRET=sua_chave_jwt_super_secreta
    MONGODB_URI=mongodb+srv://usuario:senha@cluster0.xxxxx.mongodb.net/vehicles_service?retryWrites=true&w=majority
-   FRONTEND_URL=https://revenda-veiculos.vercel.app
+   FRONTEND_URL=https://fase-3.vercel.app
    LOG_LEVEL=info
    ```
 
@@ -109,17 +109,17 @@ O Render usará as configurações do `render.yaml`, mas você pode ajustar:
    PORT=10000
    JWT_SECRET=sua_chave_jwt_super_secreta
    MONGODB_URI=mongodb+srv://usuario:senha@cluster0.xxxxx.mongodb.net/orders_service?retryWrites=true&w=majority
-   VEHICLES_SERVICE_URL=https://revenda-vehicles-service.onrender.com
-   FRONTEND_URL=https://revenda-veiculos.vercel.app
+   VEHICLES_SERVICE_URL=https://fase-3.onrender.com
+   FRONTEND_URL=https://fase-3.vercel.app
    LOG_LEVEL=info
    ```
 
 ## 🔗 URLs dos Serviços
 
 Após o deploy, você terá URLs como:
-- **Auth Service**: `https://revenda-auth-service.onrender.com`
-- **Vehicles Service**: `https://revenda-vehicles-service.onrender.com`
-- **Orders Service**: `https://revenda-orders-service.onrender.com`
+- **Auth Service**: `https://fase-3.onrender.com`
+- **Vehicles Service**: `https://fase-3.onrender.com`
+- **Orders Service**: `https://fase-3.onrender.com`
 
 ## 🧪 Testando o Deploy
 
@@ -127,16 +127,16 @@ Após o deploy, você terá URLs como:
 
 ```bash
 # Testar cada serviço
-curl https://revenda-auth-service.onrender.com/health
-curl https://revenda-vehicles-service.onrender.com/health
-curl https://revenda-orders-service.onrender.com/health
+curl https://fase-3.onrender.com/health
+curl https://fase-3.onrender.com/health
+curl https://fase-3.onrender.com/health
 ```
 
 ### 2. Login de Teste
 
 ```bash
 # Fazer login
-curl -X POST https://revenda-auth-service.onrender.com/auth/login \
+curl -X POST https://fase-3.onrender.com/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email": "admin@revenda.com", "senha": "admin123"}'
 ```
@@ -145,7 +145,7 @@ curl -X POST https://revenda-auth-service.onrender.com/auth/login \
 
 ```bash
 # Listar veículos (com token)
-curl https://revenda-vehicles-service.onrender.com/vehicles \
+curl https://fase-3.onrender.com/vehicles \
   -H "Authorization: Bearer SEU_TOKEN_AQUI"
 ```
 
