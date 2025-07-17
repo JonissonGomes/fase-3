@@ -5,6 +5,10 @@ const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/auth_service';
     
+    console.log('=== DATABASE DEBUG ===');
+    console.log('MongoURI:', mongoURI);
+    console.log('=====================');
+    
     await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
