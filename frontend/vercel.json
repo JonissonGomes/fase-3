@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "VITE_AUTH_SERVICE_URL": "https://fase-3-auth-service.onrender.com",
+    "VITE_VEHICLES_SERVICE_URL": "https://fase-3-vehicles-service.onrender.com",
+    "VITE_ORDERS_SERVICE_URL": "https://fase-3-orders-service.onrender.com"
+  }
+} 

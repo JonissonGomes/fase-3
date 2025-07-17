@@ -1,376 +1,207 @@
-# Frontend - Revenda de Veículos
+# Frontend - Plataforma de Revenda de Veículos
 
-## 🚀 Visão Geral
+Frontend React para a plataforma de revenda de veículos, desenvolvido com Vite, Tailwind CSS e integração com microserviços.
 
-Este diretório contém o frontend da aplicação de revenda de veículos, que será hospedado na Vercel.
+## 🚀 Tecnologias
 
-## 📋 Tecnologias Recomendadas
+- **React 18** - Biblioteca JavaScript para interfaces
+- **Vite** - Build tool e dev server
+- **Tailwind CSS** - Framework CSS utilitário
+- **React Router DOM** - Roteamento
+- **Axios** - Cliente HTTP
+- **React Hook Form** - Gerenciamento de formulários
+- **React Hot Toast** - Notificações
+- **Lucide React** - Ícones
 
-### Opção 1: React + Vite (Recomendado)
-```bash
-# Criar projeto React com Vite
-npm create vite@latest . -- --template react
-npm install
+## 📁 Estrutura do Projeto
 
-# Dependências recomendadas
-npm install axios react-router-dom @tanstack/react-query
-npm install -D tailwindcss postcss autoprefixer
-```
-
-### Opção 2: Next.js
-```bash
-# Criar projeto Next.js
-npx create-next-app@latest . --typescript --tailwind --eslint
-npm install axios @tanstack/react-query
-```
-
-### Opção 3: Vue.js
-```bash
-# Criar projeto Vue
-npm create vue@latest .
-npm install
-
-# Dependências recomendadas
-npm install axios vue-router pinia
-```
-
-## 🔧 Configuração
-
-### 1. Estrutura de Diretórios
 ```
 frontend/
 ├── src/
 │   ├── components/          # Componentes reutilizáveis
-│   │   ├── Header.jsx
-│   │   ├── Footer.jsx
-│   │   ├── VehicleCard.jsx
-│   │   └── LoginForm.jsx
-│   ├── pages/              # Páginas da aplicação
-│   │   ├── Home.jsx
-│   │   ├── Login.jsx
-│   │   ├── Vehicles.jsx
-│   │   ├── Orders.jsx
-│   │   └── Admin.jsx
-│   ├── services/           # Serviços de API
-│   │   ├── api.js
-│   │   ├── auth.js
-│   │   └── vehicles.js
-│   ├── hooks/              # Custom hooks
-│   │   ├── useAuth.js
-│   │   └── useVehicles.js
-│   ├── context/            # Context API
-│   │   └── AuthContext.jsx
-│   ├── utils/              # Utilitários
-│   │   └── helpers.js
-│   └── App.jsx
+│   │   ├── LoginForm.jsx    # Formulário de login
+│   │   ├── RegisterForm.jsx # Formulário de cadastro
+│   │   ├── ProtectedRoute.jsx # Proteção de rotas
+│   │   └── LoadingSpinner.jsx # Componente de loading
+│   ├── contexts/            # Contextos React
+│   │   └── AuthContext.jsx  # Contexto de autenticação
+│   ├── pages/               # Páginas da aplicação
+│   │   ├── Dashboard.jsx    # Dashboard principal
+│   │   ├── VehiclesList.jsx # Lista de veículos
+│   │   ├── VehicleForm.jsx  # Formulário de veículos
+│   │   ├── OrdersList.jsx   # Lista de pedidos
+│   │   └── UsersList.jsx    # Lista de usuários (Admin)
+│   ├── services/            # Serviços de API
+│   │   └── api.js          # Configuração e serviços da API
+│   ├── App.jsx             # Componente principal
+│   ├── main.jsx            # Ponto de entrada
+│   └── index.css           # Estilos globais
 ├── public/                 # Arquivos estáticos
-├── package.json
-├── vite.config.js          # ou next.config.js
-├── vercel.json             # Configuração da Vercel
-└── tailwind.config.js      # Configuração do Tailwind
+├── package.json            # Dependências
+├── vite.config.js          # Configuração do Vite
+├── tailwind.config.js      # Configuração do Tailwind
+└── postcss.config.js       # Configuração do PostCSS
 ```
 
-### 2. Configuração das APIs
+## 🎯 Funcionalidades
 
-```javascript
-// src/services/api.js
-const API_BASE_URLS = {
-  auth: import.meta.env.VITE_AUTH_SERVICE_URL || 'https://revenda-auth-service.onrender.com',
-  vehicles: import.meta.env.VITE_VEHICLES_SERVICE_URL || 'https://revenda-vehicles-service.onrender.com',
-  orders: import.meta.env.VITE_ORDERS_SERVICE_URL || 'https://revenda-orders-service.onrender.com'
-};
+### 🔐 Autenticação
+- **Login** - Acesso com email e senha
+- **Cadastro** - Registro de novos usuários
+  - Cliente: Nome, Email, Senha, CPF
+  - Vendedor: Nome, Email, Senha
+  - Admin: Nome, Email, Senha
+- **Logout** - Encerramento de sessão
 
-export const api = {
-  auth: {
-    login: async (credentials) => {
-      const response = await fetch(`${API_BASE_URLS.auth}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(credentials)
-      });
-      return response.json();
-    },
-    register: async (userData) => {
-      const response = await fetch(`${API_BASE_URLS.auth}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData)
-      });
-      return response.json();
-    }
-  },
-  vehicles: {
-    list: async (token) => {
-      const response = await fetch(`${API_BASE_URLS.vehicles}/vehicles`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      return response.json();
-    },
-    create: async (vehicleData, token) => {
-      const response = await fetch(`${API_BASE_URLS.vehicles}/vehicles`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(vehicleData)
-      });
-      return response.json();
-    }
-  },
-  orders: {
-    list: async (token) => {
-      const response = await fetch(`${API_BASE_URLS.orders}/orders`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      return response.json();
-    },
-    create: async (orderData, token) => {
-      const response = await fetch(`${API_BASE_URLS.orders}/orders`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(orderData)
-      });
-      return response.json();
-    }
-  }
-};
-```
+### 👤 Perfis de Usuário
 
-### 3. Configuração da Vercel
+#### 🛒 Cliente
+- Visualizar veículos disponíveis
+- Comprar veículos
+- Acompanhar histórico de pedidos
 
-```json
-// vercel.json
-{
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
-  ]
-}
-```
+#### 🏪 Vendedor
+- Cadastrar veículos
+- Editar veículos
+- Excluir veículos
+- Visualizar veículos vendidos
 
-### 4. Variáveis de Ambiente
+#### 👑 Administrador
+- Gerenciar usuários
+- Aprovar/rejeitar pedidos
+- Visualizar todas as vendas
+- Acesso total ao sistema
 
+## 🚀 Como Executar
+
+### Pré-requisitos
+- Node.js 16+ 
+- NPM ou Yarn
+
+### Instalação
+
+1. **Instalar dependências:**
 ```bash
-# .env.local (desenvolvimento)
-VITE_AUTH_SERVICE_URL=http://localhost:3001
-VITE_VEHICLES_SERVICE_URL=http://localhost:3002
-VITE_ORDERS_SERVICE_URL=http://localhost:3003
-
-# .env.production (produção)
-VITE_AUTH_SERVICE_URL=https://revenda-auth-service.onrender.com
-VITE_VEHICLES_SERVICE_URL=https://revenda-vehicles-service.onrender.com
-VITE_ORDERS_SERVICE_URL=https://revenda-orders-service.onrender.com
+cd frontend
+npm install
 ```
+
+2. **Configurar variáveis de ambiente:**
+Criar arquivo `.env` na raiz do frontend:
+```env
+VITE_AUTH_SERVICE_URL=https://fase-3-auth-service.onrender.com
+VITE_VEHICLES_SERVICE_URL=https://fase-3-vehicles-service.onrender.com
+VITE_ORDERS_SERVICE_URL=https://fase-3-orders-service.onrender.com
+```
+
+3. **Executar em desenvolvimento:**
+```bash
+npm run dev
+```
+
+4. **Build para produção:**
+```bash
+npm run build
+```
+
+## 🔧 Configuração
+
+### URLs dos Microserviços
+O frontend se conecta aos seguintes microserviços:
+
+- **Auth Service**: `https://fase-3-auth-service.onrender.com`
+- **Vehicles Service**: `https://fase-3-vehicles-service.onrender.com`
+- **Orders Service**: `https://fase-3-orders-service.onrender.com`
+
+### Variáveis de Ambiente
+```env
+# URLs dos microserviços (opcional - usa valores padrão se não definido)
+VITE_AUTH_SERVICE_URL=https://fase-3-auth-service.onrender.com
+VITE_VEHICLES_SERVICE_URL=https://fase-3-vehicles-service.onrender.com
+VITE_ORDERS_SERVICE_URL=https://fase-3-orders-service.onrender.com
+```
+
+## 🎨 Design System
+
+### Cores
+- **Primary**: Azul (#3B82F6)
+- **Success**: Verde (#10B981)
+- **Warning**: Amarelo (#F59E0B)
+- **Error**: Vermelho (#EF4444)
+
+### Componentes
+- **Botões**: `.btn-primary`, `.btn-secondary`
+- **Inputs**: `.input-field`
+- **Cards**: `.card`
+
+## 📱 Responsividade
+
+O frontend é totalmente responsivo e funciona em:
+- 📱 Mobile (320px+)
+- 📱 Tablet (768px+)
+- 💻 Desktop (1024px+)
+
+## 🔒 Segurança
+
+- **Autenticação JWT** - Tokens armazenados no localStorage
+- **Proteção de Rotas** - Verificação de permissões por perfil
+- **Interceptors Axios** - Adição automática de tokens
+- **Validação de Formulários** - Validação client-side
 
 ## 🚀 Deploy
 
-### 1. Preparar para Deploy
+### Vercel (Recomendado)
+1. Conectar repositório GitHub
+2. Configurar variáveis de ambiente
+3. Deploy automático
+
+### Outras Plataformas
+- **Netlify**: Compatível
+- **GitHub Pages**: Requer configuração adicional
+- **Firebase Hosting**: Compatível
+
+## 🧪 Testes
+
 ```bash
-# Instalar dependências
-npm install
+# Executar linting
+npm run lint
 
-# Build para produção
-npm run build
-
-# Testar build localmente
+# Preview build
 npm run preview
 ```
 
-### 2. Deploy na Vercel
+## 📝 Scripts Disponíveis
+
 ```bash
-# Instalar Vercel CLI
-npm i -g vercel
-
-# Login na Vercel
-vercel login
-
-# Deploy
-vercel
-
-# Deploy em produção
-vercel --prod
+npm run dev          # Servidor de desenvolvimento
+npm run build        # Build para produção
+npm run preview      # Preview do build
+npm run lint         # Executar ESLint
 ```
 
-### 3. Deploy Automático
-1. Conecte o repositório na Vercel
-2. Configure as variáveis de ambiente no dashboard
-3. Cada push no GitHub fará deploy automático
+## 🔗 Integração com Backend
 
-## 🧪 Testando
+O frontend se integra com os microserviços através do arquivo `src/services/api.js`, que inclui:
 
-### 1. Desenvolvimento Local
-```bash
-# Iniciar servidor de desenvolvimento
-npm run dev
+- **Interceptors** para autenticação automática
+- **Tratamento de erros** centralizado
+- **Timeout** configurado
+- **Serviços organizados** por domínio
 
-# Testar com backend local
-# Certifique-se de que os microserviços estão rodando
-```
+## 🎯 Próximos Passos
 
-### 2. Testar APIs
-```bash
-# Testar login
-curl -X POST http://localhost:3001/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email": "admin@revenda.com", "senha": "admin123"}'
-```
-
-### 3. Testar Frontend
-- Acesse http://localhost:5173 (Vite) ou http://localhost:3000 (Next.js)
-- Teste login com usuários de exemplo
-- Teste funcionalidades principais
-
-## 📱 Funcionalidades
-
-### Páginas Principais
-- **Home**: Página inicial com veículos em destaque
-- **Login/Register**: Autenticação de usuários
-- **Vehicles**: Lista e detalhes de veículos
-- **Orders**: Histórico de pedidos
-- **Admin**: Painel administrativo (apenas Admin)
-
-### Perfis de Usuário
-- **Cliente**: Visualizar e comprar veículos
-- **Vendedor**: Cadastrar e gerenciar veículos
-- **Admin**: Acesso total ao sistema
-
-## 🔐 Autenticação
-
-### Context API
-```javascript
-// src/context/AuthContext.jsx
-import { createContext, useContext, useState } from 'react';
-
-const AuthContext = createContext();
-
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token'));
-
-  const login = async (credentials) => {
-    try {
-      const response = await api.auth.login(credentials);
-      if (response.token) {
-        setToken(response.token);
-        setUser(response.usuario);
-        localStorage.setItem('token', response.token);
-        return { success: true };
-      }
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
-  };
-
-  const logout = () => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('token');
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
-
-export const useAuth = () => useContext(AuthContext);
-```
-
-## 🎨 Styling
-
-### Tailwind CSS
-```bash
-# Instalar Tailwind
-npm install -D tailwindcss postcss autoprefixer
-npx tailwindcss init -p
-```
-
-```javascript
-// tailwind.config.js
-module.exports = {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  theme: {
-    extend: {
-      colors: {
-        primary: '#3B82F6',
-        secondary: '#10B981',
-      }
-    },
-  },
-  plugins: [],
-}
-```
-
-## 📊 Performance
-
-### Otimizações
-- **Code Splitting**: Carregamento sob demanda
-- **Lazy Loading**: Componentes carregados quando necessário
-- **Image Optimization**: Otimização automática de imagens
-- **Caching**: Cache inteligente da Vercel
-
-### Métricas
-- **Lighthouse Score**: Performance, SEO, Accessibility
-- **Core Web Vitals**: LCP, FID, CLS
-- **Bundle Analysis**: Tamanho dos arquivos
-
-## 🔄 CI/CD
-
-### GitHub Actions
-```yaml
-# .github/workflows/deploy-frontend.yml
-name: Deploy Frontend
-
-on:
-  push:
-    branches: [ main ]
-    paths: [ 'frontend/**' ]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v20
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.ORG_ID }}
-          vercel-project-id: ${{ secrets.PROJECT_ID }}
-          working-directory: ./frontend
-```
+- [ ] Implementar testes unitários
+- [ ] Adicionar upload de imagens para veículos
+- [ ] Implementar filtros avançados
+- [ ] Adicionar paginação
+- [ ] Implementar busca em tempo real
+- [ ] Adicionar notificações push
+- [ ] Implementar PWA
 
 ## 📞 Suporte
 
-### Documentação
-- [Vite](https://vitejs.dev/)
-- [React](https://react.dev/)
-- [Next.js](https://nextjs.org/)
-- [Vue.js](https://vuejs.org/)
-- [Vercel](https://vercel.com/docs)
-
-### Projeto
-- [Backend Documentation](../docs/DEPLOY_RENDER.md)
-- [API Documentation](../docs/API.md)
-- [Postman Collection](../docs/Revenda_Veiculos_API.postman_collection.json) 
+Para dúvidas ou problemas:
+1. Verificar logs do console
+2. Verificar conectividade com microserviços
+3. Verificar variáveis de ambiente
+4. Abrir issue no repositório 
