@@ -1,0 +1,85 @@
+databases:
+  - name: revenda-mongodb
+    databaseName: revenda_veiculos
+    user: revenda_user
+
+services:
+  # Auth Service
+  - type: web
+    name: revenda-auth-service
+    env: node
+    plan: free
+    buildCommand: cd services/auth-service && npm ci --only=production
+    startCommand: cd services/auth-service && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        fromDatabase:
+          name: revenda-mongodb
+          property: connectionString
+      - key: FRONTEND_URL
+        value: https://revenda-veiculos-frontend.onrender.com
+      - key: LOG_LEVEL
+        value: info
+
+  # Vehicles Service
+  - type: web
+    name: revenda-vehicles-service
+    env: node
+    plan: free
+    buildCommand: cd services/vehicles-service && npm ci --only=production
+    startCommand: cd services/vehicles-service && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        fromService:
+          type: web
+          name: revenda-auth-service
+          envVarKey: JWT_SECRET
+      - key: MONGODB_URI
+        fromDatabase:
+          name: revenda-mongodb
+          property: connectionString
+      - key: FRONTEND_URL
+        value: https://revenda-veiculos-frontend.onrender.com
+      - key: LOG_LEVEL
+        value: info
+
+  # Orders Service
+  - type: web
+    name: revenda-orders-service
+    env: node
+    plan: free
+    buildCommand: cd services/orders-service && npm ci --only=production
+    startCommand: cd services/orders-service && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        fromService:
+          type: web
+          name: revenda-auth-service
+          envVarKey: JWT_SECRET
+      - key: MONGODB_URI
+        fromDatabase:
+          name: revenda-mongodb
+          property: connectionString
+      - key: VEHICLES_SERVICE_URL
+        fromService:
+          type: web
+          name: revenda-vehicles-service
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: FRONTEND_URL
+        value: https://revenda-veiculos-frontend.onrender.com
+      - key: LOG_LEVEL
+        value: info 
