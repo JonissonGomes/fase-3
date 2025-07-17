@@ -9,9 +9,8 @@ services:
     name: fase-3-auth-service
     env: node
     plan: free
-    rootDir: services/auth-service
-    buildCommand: npm ci --only=production
-    startCommand: npm start
+    buildCommand: npm install --workspace=services/auth-service --only=production
+    startCommand: npm start --workspace=services/auth-service
     envVars:
       - key: NODE_ENV
         value: production
@@ -33,9 +32,8 @@ services:
     name: fase-3-vehicles-service
     env: node
     plan: free
-    rootDir: services/vehicles-service
-    buildCommand: npm ci --only=production
-    startCommand: npm start
+    buildCommand: npm install --workspace=services/vehicles-service --only=production
+    startCommand: npm start --workspace=services/vehicles-service
     envVars:
       - key: NODE_ENV
         value: production
@@ -60,9 +58,8 @@ services:
     name: fase-3-orders-service
     env: node
     plan: free
-    rootDir: services/orders-service
-    buildCommand: npm ci --only=production
-    startCommand: npm start
+    buildCommand: npm install --workspace=services/orders-service --only=production
+    startCommand: npm start --workspace=services/orders-service
     envVars:
       - key: NODE_ENV
         value: production
