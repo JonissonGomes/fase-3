@@ -143,9 +143,18 @@ clean: ## Remove containers, volumes e imagens
 	@$(DOCKER_COMPOSE) down -v --rmi all
 	@echo "$(GREEN)✅ Ambiente limpo$(NC)"
 
+clean-logs: ## Remove logs dos serviços
+	@echo "$(BLUE)🧹 Removendo logs...$(NC)"
+	@for service in $(SERVICES); do \
+		echo "$(YELLOW)Removendo logs de $$service...$(NC)"; \
+		rm -rf services/$$service/logs/*.log 2>/dev/null || true; \
+	done
+	@echo "$(GREEN)✅ Logs removidos$(NC)"
+
 clean-all: ## Remove tudo (containers, volumes, imagens e node_modules)
 	@echo "$(BLUE)🧹 Limpeza completa...$(NC)"
 	@$(MAKE) clean
+	@$(MAKE) clean-logs
 	@for service in $(SERVICES); do \
 		echo "$(YELLOW)Removendo node_modules de $$service...$(NC)"; \
 		rm -rf services/$$service/node_modules; \
@@ -295,8 +304,51 @@ docs: ## Abre documentação da API
 # Comandos de produção
 prod-setup: ## Configuração para produção
 	@echo "$(BLUE)🏭 Configurando para produção...$(NC)"
-	@echo "$(YELLOW)⚠️  Ajuste as variáveis de ambiente em .env$(NC)"
+	@if [ ! -f .env.prod ]; then \
+		cp env.prod.example .env.prod; \
+		echo "$(YELLOW)⚠️  Arquivo .env.prod criado. Configure as variáveis de ambiente$(NC)"; \
+	else \
+		echo "$(GREEN)✅ Arquivo .env.prod já existe$(NC)"; \
+	fi
 	@echo "$(YELLOW)⚠️  Configure SSL/TLS$(NC)"
 	@echo "$(YELLOW)⚠️  Configure monitoramento$(NC)"
 	@echo "$(YELLOW)⚠️  Configure backup automático$(NC)"
-	@echo "$(GREEN)✅ Verifique a documentação de produção$(NC)" 
+	@echo "$(GREEN)✅ Verifique a documentação de produção$(NC)"
+
+prod-build: ## Build para produção
+	@echo "$(BLUE)🏭 Build para produção...$(NC)"
+	@docker-compose -f docker-compose.prod.yml build --no-cache
+	@echo "$(GREEN)✅ Build de produção concluído$(NC)"
+
+prod-start: ## Inicia serviços em produção
+	@echo "$(BLUE)🏭 Iniciando serviços de produção...$(NC)"
+	@docker-compose -f docker-compose.prod.yml up -d
+	@echo "$(GREEN)✅ Serviços de produção iniciados$(NC)"
+
+prod-stop: ## Para serviços de produção
+	@echo "$(BLUE)🏭 Parando serviços de produção...$(NC)"
+	@docker-compose -f docker-compose.prod.yml down
+	@echo "$(GREEN)✅ Serviços de produção parados$(NC)"
+
+prod-logs: ## Mostra logs de produção
+	@echo "$(BLUE)📋 Logs de produção...$(NC)"
+	@docker-compose -f docker-compose.prod.yml logs -f
+
+prod-status: ## Status dos serviços de produção
+	@echo "$(BLUE)📊 Status dos serviços de produção...$(NC)"
+	@docker-compose -f docker-compose.prod.yml ps
+
+prod-clean: ## Limpa ambiente de produção
+	@echo "$(BLUE)🧹 Limpando ambiente de produção...$(NC)"
+	@docker-compose -f docker-compose.prod.yml down -v --rmi all
+	@echo "$(GREEN)✅ Ambiente de produção limpo$(NC)"
+
+prod-deploy: ## Deploy completo para produção
+	@echo "$(BLUE)🚀 Deploy para produção...$(NC)"
+	@$(MAKE) prod-build
+	@$(MAKE) prod-start
+	@echo "$(GREEN)✅ Deploy de produção concluído$(NC)"
+	@echo "$(YELLOW)🌐 URLs dos serviços:$(NC)"
+	@echo "$(YELLOW)   Auth: http://localhost:3001$(NC)"
+	@echo "$(YELLOW)   Vehicles: http://localhost:3002$(NC)"
+	@echo "$(YELLOW)   Orders: http://localhost:3003$(NC)" 

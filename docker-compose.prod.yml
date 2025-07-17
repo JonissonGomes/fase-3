@@ -1,0 +1,109 @@
+version: '3.8'
+
+services:
+  # MongoDB
+  mongodb:
+    image: mongo:7.0
+    container_name: revenda_mongodb_prod
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-password}
+    volumes:
+      - mongodb_data:/data/db
+      - ./infrastructure/docker/mongodb/init.js:/docker-entrypoint-initdb.d/init.js:ro
+    networks:
+      - revenda_network_prod
+    # Remover exposição de porta para produção (usar apenas internamente)
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+    container_name: revenda_auth_service_prod
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      MONGODB_URI: ${MONGODB_URI:-mongodb://admin:password@mongodb:27017/auth_service?authSource=admin}
+      JWT_SECRET: ${JWT_SECRET:-your_jwt_secret_key_here}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      - mongodb
+    networks:
+      - revenda_network_prod
+    # Remover volumes de desenvolvimento
+
+  # Vehicles Service
+  vehicles-service:
+    build:
+      context: ./services/vehicles-service
+      dockerfile: Dockerfile
+    container_name: revenda_vehicles_service_prod
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: production
+      PORT: 3002
+      MONGODB_URI: ${MONGODB_URI:-mongodb://admin:password@mongodb:27017/vehicles_service?authSource=admin}
+      JWT_SECRET: ${JWT_SECRET:-your_jwt_secret_key_here}
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      - mongodb
+    networks:
+      - revenda_network_prod
+
+  # Orders Service
+  orders-service:
+    build:
+      context: ./services/orders-service
+      dockerfile: Dockerfile
+    container_name: revenda_orders_service_prod
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      NODE_ENV: production
+      PORT: 3003
+      MONGODB_URI: ${MONGODB_URI:-mongodb://admin:password@mongodb:27017/orders_service?authSource=admin}
+      JWT_SECRET: ${JWT_SECRET:-your_jwt_secret_key_here}
+      VEHICLES_SERVICE_URL: http://vehicles-service:3002
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      - mongodb
+      - vehicles-service
+    networks:
+      - revenda_network_prod
+
+  # Nginx Reverse Proxy (Opcional - para produção)
+  nginx:
+    image: nginx:alpine
+    container_name: revenda_nginx_prod
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./infrastructure/nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - auth-service
+      - vehicles-service
+      - orders-service
+    networks:
+      - revenda_network_prod
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  revenda_network_prod:
+    driver: bridge 

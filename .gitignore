@@ -137,3 +137,32 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# ========================================
+# PRODUÇÃO E SEGURANÇA
+# ========================================
+
+# Certificados SSL/TLS
+*.pem
+*.key
+*.crt
+*.cert
+*.p12
+*.pfx
+
+# Arquivos de produção
+.env.prod
+.env.production
+
+# Logs de produção
+logs/prod/
+*.prod.log
+
+# Backups
+backups/
+*.backup
+*.bak
+
+# Arquivos temporários de produção
+tmp/
+temp/
