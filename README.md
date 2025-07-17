@@ -11,7 +11,12 @@ Plataforma web completa para revenda de veículos com arquitetura de microservi�
 - **orders-service**: Gerenciamento de pedidos (MongoDB)
 
 ### Frontend
-- **frontend**: Interface React com Tailwind CSS
+- **frontend**: Interface React com Tailwind CSS (✅ IMPLEMENTADO)
+  - Dashboard responsivo para todos os perfis
+  - Autenticação com JWT
+  - Formulários de cadastro e login
+  - Gerenciamento de veículos e pedidos
+  - Interface moderna e intuitiva
 
 ### Infraestrutura
 - Docker para containerização
@@ -46,10 +51,14 @@ Plataforma web completa para revenda de veículos com arquitetura de microservi�
 - Jest para testes
 
 ### Frontend
-- React 18
-- Tailwind CSS
+- React 18 com Vite
+- Tailwind CSS para styling
+- React Router DOM para navegação
 - Context API para gerenciamento de estado
 - Axios para comunicação com APIs
+- React Hook Form para formulários
+- React Hot Toast para notificações
+- Lucide React para ícones
 
 ### DevOps
 - Docker
@@ -176,6 +185,7 @@ Este projeto está **pronto para publicação pública como MVP**! Após anális
 
 ### 🎯 O que está incluído:
 - ✅ **3 Microserviços funcionais** (Auth, Vehicles, Orders)
+- ✅ **Frontend React completo** com dashboard responsivo
 - ✅ **Autenticação JWT** com controle de perfis
 - ✅ **Banco MongoDB** com dados de seed
 - ✅ **Docker Compose** para deploy fácil
@@ -200,6 +210,9 @@ make prod-deploy
 ./scripts/setup-render.sh
 
 # Frontend (Vercel)
+cd frontend
+npm install
+npm run build
 # 1. Conecte o repositório na Vercel
 # 2. Configure o diretório frontend/
 # 3. Configure variáveis de ambiente

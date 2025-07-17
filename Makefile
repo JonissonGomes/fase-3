@@ -1,7 +1,7 @@
 # Makefile - Plataforma de Revenda de Veículos
 # Comandos para instalação, execução e gerenciamento da aplicação
 
-.PHONY: help install setup dev start stop restart logs clean test seed health check-deps
+.PHONY: help install setup dev start stop restart logs clean test seed health check-deps frontend frontend-dev frontend-build frontend-setup
 
 # Variáveis
 DOCKER_COMPOSE = docker-compose
@@ -29,7 +29,7 @@ help: ## Mostra esta ajuda
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  $(YELLOW)%-15s$(NC) %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 	@echo ""
 	@echo "$(GREEN)URLs da aplicação:$(NC)"
-	@echo "  Frontend:     $(FRONTEND_URL)"
+	@echo "  Frontend:     $(FRONTEND_URL) (React/Vite)"
 	@echo "  Auth Service: $(AUTH_URL)"
 	@echo "  Vehicles:     $(VEHICLES_URL)"
 	@echo "  Orders:       $(ORDERS_URL)"
@@ -351,4 +351,42 @@ prod-deploy: ## Deploy completo para produção
 	@echo "$(YELLOW)🌐 URLs dos serviços:$(NC)"
 	@echo "$(YELLOW)   Auth: http://localhost:3001$(NC)"
 	@echo "$(YELLOW)   Vehicles: http://localhost:3002$(NC)"
-	@echo "$(YELLOW)   Orders: http://localhost:3003$(NC)" 
+	@echo "$(YELLOW)   Orders: http://localhost:3003$(NC)"
+
+# Comandos do Frontend
+frontend-setup: ## Setup do frontend React
+	@echo "$(BLUE)🎨 Setup do Frontend React...$(NC)"
+	@./scripts/setup-frontend.sh
+
+frontend-install: ## Instala dependências do frontend
+	@echo "$(BLUE)📦 Instalando dependências do frontend...$(NC)"
+	@cd frontend && npm install
+	@echo "$(GREEN)✅ Dependências do frontend instaladas$(NC)"
+
+frontend-dev: ## Executa frontend em modo desenvolvimento
+	@echo "$(BLUE)🎨 Iniciando frontend em desenvolvimento...$(NC)"
+	@cd frontend && npm run dev
+
+frontend-build: ## Build do frontend para produção
+	@echo "$(BLUE)🏗️ Build do frontend...$(NC)"
+	@cd frontend && npm run build
+	@echo "$(GREEN)✅ Build do frontend concluído$(NC)"
+
+frontend-preview: ## Preview do build do frontend
+	@echo "$(BLUE)👀 Preview do frontend...$(NC)"
+	@cd frontend && npm run preview
+
+frontend-lint: ## Executa linting do frontend
+	@echo "$(BLUE)🔍 Linting do frontend...$(NC)"
+	@cd frontend && npm run lint
+
+frontend-clean: ## Limpa build do frontend
+	@echo "$(BLUE)🧹 Limpando build do frontend...$(NC)"
+	@cd frontend && rm -rf dist node_modules package-lock.json
+	@echo "$(GREEN)✅ Build do frontend limpo$(NC)"
+
+frontend: ## Setup completo do frontend (instala + build)
+	@echo "$(BLUE)🎨 Setup completo do frontend...$(NC)"
+	@$(MAKE) frontend-install
+	@$(MAKE) frontend-build
+	@echo "$(GREEN)✅ Frontend configurado$(NC)" 
