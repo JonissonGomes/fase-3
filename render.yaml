@@ -4,7 +4,7 @@ services:
     name: fase-3-auth-service
     env: node
     plan: free
-    buildCommand: cd services/auth-service && npm install
+    buildCommand: cd services/auth-service && npm install --production
     startCommand: cd services/auth-service && npm start
     envVars:
       - key: NODE_ENV
@@ -17,13 +17,17 @@ services:
         sync: false
       - key: FRONTEND_URL
         value: https://fase-3.vercel.app
+      - key: CORS_ORIGIN
+        value: "*"
+    healthCheckPath: /health
+    autoDeploy: true
 
   # Vehicles Service
   - type: web
     name: fase-3-vehicles-service
     env: node
     plan: free
-    buildCommand: cd services/vehicles-service && npm install
+    buildCommand: cd services/vehicles-service && npm install --production
     startCommand: cd services/vehicles-service && npm start
     envVars:
       - key: NODE_ENV
@@ -36,13 +40,17 @@ services:
         sync: false
       - key: FRONTEND_URL
         value: https://fase-3.vercel.app
+      - key: CORS_ORIGIN
+        value: "*"
+    healthCheckPath: /health
+    autoDeploy: true
 
   # Orders Service
   - type: web
     name: fase-3-orders-service
     env: node
     plan: free
-    buildCommand: cd services/orders-service && npm install
+    buildCommand: cd services/orders-service && npm install --production
     startCommand: cd services/orders-service && npm start
     envVars:
       - key: NODE_ENV
@@ -54,4 +62,8 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: FRONTEND_URL
-        value: https://fase-3.vercel.app 
+        value: https://fase-3.vercel.app
+      - key: CORS_ORIGIN
+        value: "*"
+    healthCheckPath: /health
+    autoDeploy: true 

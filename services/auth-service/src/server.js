@@ -6,6 +6,7 @@ console.log('NODE_ENV:', process.env.NODE_ENV);
 console.log('PORT:', process.env.PORT);
 console.log('MONGODB_URI:', process.env.MONGODB_URI ? 'SET' : 'NOT SET');
 console.log('MONGODB_URI value:', process.env.MONGODB_URI || 'NOT SET');
+console.log('CORS_ORIGIN:', process.env.CORS_ORIGIN || 'NOT SET');
 console.log('==================');
 
 const express = require('express');
@@ -24,23 +25,12 @@ connectDB();
 
 // Middlewares de segurança
 app.use(helmet());
-// Configuração de CORS para múltiplos domínios
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://fase-3.vercel.app',
-  'https://fase-3-git-main-jonissongomes.vercel.app',
-  'https://fase-3-git-master-jonissongomes.vercel.app'
-];
 
-// Adicionar FRONTEND_URL se estiver definido
-if (process.env.FRONTEND_URL) {
-  allowedOrigins.push(process.env.FRONTEND_URL);
-}
-
-// Configuração de CORS liberada para qualquer origem
+// Configuração de CORS usando variável de ambiente
+const corsOrigin = process.env.CORS_ORIGIN || '*';
 app.use(cors({
-  origin: '*', // Permitir qualquer origem
-  credentials: false, // Desabilitar credentials para wildcard
+  origin: corsOrigin,
+  credentials: corsOrigin !== '*', // Habilitar credentials apenas se não for wildcard
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin']
 }));
@@ -75,7 +65,8 @@ app.get('/health', (req, res) => {
     status: 'OK',
     service: 'auth-service',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    corsOrigin: corsOrigin
   });
 });
 
@@ -101,6 +92,7 @@ app.use('*', (req, res) => {
 app.listen(PORT, () => {
   logger.info(`Serviço de autenticação rodando na porta ${PORT}`);
   logger.info(`Ambiente: ${process.env.NODE_ENV || 'development'}`);
+  logger.info(`CORS Origin: ${corsOrigin}`);
 });
 
 // Tratamento de sinais para graceful shutdown
