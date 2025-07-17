@@ -24,8 +24,31 @@ connectDB();
 
 // Middlewares de segurança
 app.use(helmet());
+// Configuração de CORS para múltiplos domínios
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://fase-3.vercel.app',
+  'https://fase-3-git-main-jonissongomes.vercel.app',
+  'https://fase-3-git-master-jonissongomes.vercel.app'
+];
+
+// Adicionar FRONTEND_URL se estiver definido
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    // Permitir requisições sem origin (como mobile apps ou Postman)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('CORS blocked origin:', origin);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
 
