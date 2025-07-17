@@ -1267,6 +1267,21 @@
 			"type": "string"
 		},
 		{
+			"key": "auth_base_url_prod",
+			"value": "https://fase-3-auth-service.onrender.com",
+			"type": "string"
+		},
+		{
+			"key": "vehicles_base_url_prod",
+			"value": "https://fase-3-vehicles-service.onrender.com",
+			"type": "string"
+		},
+		{
+			"key": "orders_base_url_prod",
+			"value": "https://fase-3-orders-service.onrender.com",
+			"type": "string"
+		},
+		{
 			"key": "auth_token",
 			"value": "",
 			"type": "string"
