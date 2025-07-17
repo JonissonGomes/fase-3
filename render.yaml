@@ -23,7 +23,7 @@ services:
           name: revenda-mongodb
           property: connectionString
       - key: FRONTEND_URL
-        value: https://revenda-veiculos-frontend.onrender.com
+        value: https://revenda-veiculos.vercel.app
       - key: LOG_LEVEL
         value: info
 
@@ -49,7 +49,7 @@ services:
           name: revenda-mongodb
           property: connectionString
       - key: FRONTEND_URL
-        value: https://revenda-veiculos-frontend.onrender.com
+        value: https://revenda-veiculos.vercel.app
       - key: LOG_LEVEL
         value: info
 
@@ -80,6 +80,6 @@ services:
           name: revenda-vehicles-service
           envVarKey: RENDER_EXTERNAL_URL
       - key: FRONTEND_URL
-        value: https://revenda-veiculos-frontend.onrender.com
+        value: https://revenda-veiculos.vercel.app
       - key: LOG_LEVEL
         value: info 
