@@ -9,7 +9,7 @@ services:
     name: fase-3-auth-service
     env: node
     plan: free
-    buildCommand: npm install --workspace=services/auth-service --only=production
+    buildCommand: npm install --workspace=services/auth-service --only=production && npm list --workspace=services/auth-service
     startCommand: npm start --workspace=services/auth-service
     envVars:
       - key: NODE_ENV

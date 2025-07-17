@@ -4,7 +4,7 @@
   "description": "Serviço de autenticação e gerenciamento de usuários",
   "main": "src/server.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node -e \"console.log('Starting auth-service...'); console.log('NODE_ENV:', process.env.NODE_ENV); console.log('PORT:', process.env.PORT); console.log('MONGODB_URI:', process.env.MONGODB_URI ? 'SET' : 'NOT SET');\" && node src/server.js",
     "dev": "nodemon src/server.js",
     "test": "jest",
     "test:watch": "jest --watch",
