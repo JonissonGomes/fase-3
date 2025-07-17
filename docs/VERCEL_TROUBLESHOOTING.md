@@ -31,7 +31,39 @@ Error: No Output Directory named "public" found after the Build completed.
    ls -la dist/
    ```
 
-### 2. Erro: "npm error Exit handler never called!"
+### 2. Erro: "Function Runtimes must have a valid version"
+
+**Sintoma:**
+```
+Error: Function Runtimes must have a valid version, for example `now-php@1.0.0`.
+```
+
+**Causa:** Configuração incorreta de `functions` no `vercel.json` para projetos estáticos.
+
+**Solução:**
+Remova a seção `functions` do `vercel.json` para projetos SPA:
+
+```json
+{
+  "version": 2,
+  "buildCommand": "cd frontend && npm run build",
+  "outputDirectory": "frontend/dist",
+  "installCommand": "cd frontend && npm install",
+  "framework": "vite",
+  "routes": [
+    {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
+```
+
+### 3. Erro: "npm error Exit handler never called!"
 
 **Sintoma:**
 ```
@@ -155,6 +187,8 @@ VITE_AUTH_SERVICE_URL is not defined
   }
 }
 ```
+
+**⚠️ Importante:** Para projetos SPA (Single Page Application), **NÃO** inclua a seção `functions` no `vercel.json`.
 
 ### .vercelignore
 ```
