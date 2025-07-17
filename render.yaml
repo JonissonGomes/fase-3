@@ -4,68 +4,54 @@ services:
     name: fase-3-auth-service
     env: node
     plan: free
-    buildCommand: npm install --workspace=services/auth-service --only=production && npm list --workspace=services/auth-service
-    startCommand: npm start --workspace=services/auth-service
+    buildCommand: cd services/auth-service && npm install
+    startCommand: cd services/auth-service && npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
-      - key: JWT_SECRET
-        generateValue: true
       - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
         sync: false
       - key: FRONTEND_URL
         value: https://fase-3.vercel.app
-      - key: LOG_LEVEL
-        value: info
 
   # Vehicles Service
   - type: web
     name: fase-3-vehicles-service
     env: node
     plan: free
-    buildCommand: npm install --workspace=services/vehicles-service --only=production
-    startCommand: npm start --workspace=services/vehicles-service
+    buildCommand: cd services/vehicles-service && npm install
+    startCommand: cd services/vehicles-service && npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
-      - key: JWT_SECRET
-        fromService:
-          type: web
-          name: fase-3-auth-service
-          envVarKey: JWT_SECRET
       - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
         sync: false
       - key: FRONTEND_URL
         value: https://fase-3.vercel.app
-      - key: LOG_LEVEL
-        value: info
 
   # Orders Service
   - type: web
     name: fase-3-orders-service
     env: node
     plan: free
-    buildCommand: npm install --workspace=services/orders-service --only=production
-    startCommand: npm start --workspace=services/orders-service
+    buildCommand: cd services/orders-service && npm install
+    startCommand: cd services/orders-service && npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
-      - key: JWT_SECRET
-        fromService:
-          type: web
-          name: fase-3-auth-service
-          envVarKey: JWT_SECRET
       - key: MONGODB_URI
         sync: false
-      - key: VEHICLES_SERVICE_URL
-        value: https://fase-3.onrender.com
+      - key: JWT_SECRET
+        sync: false
       - key: FRONTEND_URL
-        value: https://fase-3.vercel.app
-      - key: LOG_LEVEL
-        value: info 
+        value: https://fase-3.vercel.app 
