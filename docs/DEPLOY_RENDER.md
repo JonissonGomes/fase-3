@@ -2,7 +2,7 @@
 
 ## 🚀 Visão Geral
 
-Este guia mostra como fazer deploy dos microserviços no Render usando MongoDB Atlas como banco de dados, mantendo a estrutura de monorepo.
+Este guia mostra como fazer deploy dos microserviços backend no Render usando MongoDB Atlas como banco de dados, mantendo a estrutura de monorepo. O frontend será hospedado separadamente na Vercel.
 
 ## 📋 Pré-requisitos
 
@@ -61,7 +61,7 @@ O Render usará as configurações do `render.yaml`, mas você pode ajustar:
 
 - **JWT_SECRET**: Será gerado automaticamente
 - **MONGODB_URI**: Use a string do MongoDB Atlas
-- **FRONTEND_URL**: URL do seu frontend (quando implementado)
+- **FRONTEND_URL**: URL do frontend na Vercel (ex: https://revenda-veiculos.vercel.app)
 
 ### Opção 2: Deploy Manual
 
@@ -77,9 +77,9 @@ O Render usará as configurações do `render.yaml`, mas você pode ajustar:
    PORT=10000
    JWT_SECRET=sua_chave_jwt_super_secreta
    MONGODB_URI=mongodb+srv://usuario:senha@cluster0.xxxxx.mongodb.net/auth_service?retryWrites=true&w=majority
-   FRONTEND_URL=https://seu-frontend.onrender.com
-   LOG_LEVEL=info
-   ```
+       FRONTEND_URL=https://revenda-veiculos.vercel.app
+    LOG_LEVEL=info
+  ```
 
 #### 2. Vehicles Service
 
@@ -93,7 +93,7 @@ O Render usará as configurações do `render.yaml`, mas você pode ajustar:
    PORT=10000
    JWT_SECRET=sua_chave_jwt_super_secreta
    MONGODB_URI=mongodb+srv://usuario:senha@cluster0.xxxxx.mongodb.net/vehicles_service?retryWrites=true&w=majority
-   FRONTEND_URL=https://seu-frontend.onrender.com
+   FRONTEND_URL=https://revenda-veiculos.vercel.app
    LOG_LEVEL=info
    ```
 
@@ -110,7 +110,7 @@ O Render usará as configurações do `render.yaml`, mas você pode ajustar:
    JWT_SECRET=sua_chave_jwt_super_secreta
    MONGODB_URI=mongodb+srv://usuario:senha@cluster0.xxxxx.mongodb.net/orders_service?retryWrites=true&w=majority
    VEHICLES_SERVICE_URL=https://revenda-vehicles-service.onrender.com
-   FRONTEND_URL=https://seu-frontend.onrender.com
+   FRONTEND_URL=https://revenda-veiculos.vercel.app
    LOG_LEVEL=info
    ```
 
@@ -230,11 +230,15 @@ Configure alertas para:
 
 ### CORS
 
-Configure CORS adequadamente:
+Configure CORS adequadamente para permitir requisições do frontend na Vercel:
 ```javascript
 // Nos serviços
 app.use(cors({
-  origin: process.env.FRONTEND_URL,
+  origin: [
+    'https://revenda-veiculos.vercel.app',
+    'https://revenda-veiculos-git-main-seu-usuario.vercel.app',
+    'http://localhost:3000' // desenvolvimento
+  ],
   credentials: true
 }));
 ```

@@ -194,12 +194,23 @@ make setup
 make prod-deploy
 ```
 
-#### 2. Deploy em Cloud (Recomendado)
-- **GitHub + Render/Vercel**: Deploy automático via GitHub Actions
+#### 2. Deploy Backend no Render + Frontend na Vercel (Recomendado)
+```bash
+# Backend (Render)
+./scripts/setup-render.sh
+
+# Frontend (Vercel)
+# 1. Conecte o repositório na Vercel
+# 2. Configure o diretório frontend/
+# 3. Configure variáveis de ambiente
+```
+
+#### 3. Deploy em Outras Clouds
+- **Railway**: Similar ao Render, suporte a monorepo
 - **Heroku**: Deploy dos microserviços com MongoDB Atlas
 - **DigitalOcean/AWS**: VPS com Docker e MongoDB Atlas
 
-#### 3. Deploy com Script Automatizado
+#### 4. Deploy com Script Automatizado
 ```bash
 # Script de deploy completo
 ./scripts/deploy-prod.sh
@@ -213,6 +224,8 @@ make prod-deploy
 - ✅ Rate limiting implementado
 
 ### 📚 Documentação Completa:
+- [Deploy no Render](docs/DEPLOY_RENDER.md) - Backend (microserviços)
+- [Deploy na Vercel](docs/DEPLOY_VERCEL.md) - Frontend (React/Vue)
 - [Preparação para Publicação](docs/PREPARACAO_PUBLICACAO.md)
 - [API Documentation](docs/API.md)
 - [Guia de Instalação](INSTALACAO.md)
