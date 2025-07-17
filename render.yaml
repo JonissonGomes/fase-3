@@ -9,8 +9,9 @@ services:
     name: fase-3-auth-service
     env: node
     plan: free
-    buildCommand: cd services/auth-service && npm ci --only=production
-    startCommand: cd services/auth-service && npm start
+    rootDir: services/auth-service
+    buildCommand: npm ci --only=production
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -32,8 +33,9 @@ services:
     name: fase-3-vehicles-service
     env: node
     plan: free
-    buildCommand: cd services/vehicles-service && npm ci --only=production
-    startCommand: cd services/vehicles-service && npm start
+    rootDir: services/vehicles-service
+    buildCommand: npm ci --only=production
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -42,7 +44,7 @@ services:
       - key: JWT_SECRET
         fromService:
           type: web
-          name: revenda-auth-service
+          name: fase-3-auth-service
           envVarKey: JWT_SECRET
       - key: MONGODB_URI
         fromDatabase:
@@ -58,8 +60,9 @@ services:
     name: fase-3-orders-service
     env: node
     plan: free
-    buildCommand: cd services/orders-service && npm ci --only=production
-    startCommand: cd services/orders-service && npm start
+    rootDir: services/orders-service
+    buildCommand: npm ci --only=production
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -68,7 +71,7 @@ services:
       - key: JWT_SECRET
         fromService:
           type: web
-          name: revenda-auth-service
+          name: fase-3-auth-service
           envVarKey: JWT_SECRET
       - key: MONGODB_URI
         fromDatabase:
