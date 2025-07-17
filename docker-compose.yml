@@ -1,0 +1,119 @@
+version: '3.8'
+
+services:
+  # MongoDB
+  mongodb:
+    image: mongo:7.0
+    container_name: revenda_mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongodb_data:/data/db
+      - ./infrastructure/docker/mongodb/init.js:/docker-entrypoint-initdb.d/init.js:ro
+    networks:
+      - revenda_network
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+    container_name: revenda_auth_service
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      MONGODB_URI: mongodb://admin:password@mongodb:27017/auth_service?authSource=admin
+      JWT_SECRET: your_jwt_secret_key_here
+      FRONTEND_URL: http://localhost:3000
+    depends_on:
+      - mongodb
+    volumes:
+      - ./services/auth-service:/app
+      - /app/node_modules
+    networks:
+      - revenda_network
+
+  # Vehicles Service
+  vehicles-service:
+    build:
+      context: ./services/vehicles-service
+      dockerfile: Dockerfile
+    container_name: revenda_vehicles_service
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: development
+      PORT: 3002
+      MONGODB_URI: mongodb://admin:password@mongodb:27017/vehicles_service?authSource=admin
+      JWT_SECRET: your_jwt_secret_key_here
+      FRONTEND_URL: http://localhost:3000
+    depends_on:
+      - mongodb
+    volumes:
+      - ./services/vehicles-service:/app
+      - /app/node_modules
+    networks:
+      - revenda_network
+
+  # Orders Service
+  orders-service:
+    build:
+      context: ./services/orders-service
+      dockerfile: Dockerfile
+    container_name: revenda_orders_service
+    restart: unless-stopped
+    ports:
+      - "3003:3003"
+    environment:
+      NODE_ENV: development
+      PORT: 3003
+      MONGODB_URI: mongodb://admin:password@mongodb:27017/orders_service?authSource=admin
+      JWT_SECRET: your_jwt_secret_key_here
+      VEHICLES_SERVICE_URL: http://vehicles-service:3002
+      FRONTEND_URL: http://localhost:3000
+    depends_on:
+      - mongodb
+      - vehicles-service
+    volumes:
+      - ./services/orders-service:/app
+      - /app/node_modules
+    networks:
+      - revenda_network
+
+  # Frontend (React) - Comentado até implementação
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   container_name: revenda_frontend
+  #   restart: unless-stopped
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     REACT_APP_AUTH_SERVICE_URL: http://localhost:3001
+  #     REACT_APP_VEHICLES_SERVICE_URL: http://localhost:3002
+  #     REACT_APP_ORDERS_SERVICE_URL: http://localhost:3003
+  #   depends_on:
+  #     - auth-service
+  #     - vehicles-service
+  #     - orders-service
+  #   volumes:
+  #     - ./frontend:/app
+  #     - /app/node_modules
+  #   networks:
+  #     - revenda_network
+
+volumes:
+  mongodb_data:
+
+networks:
+  revenda_network:
+    driver: bridge 
