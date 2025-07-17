@@ -37,12 +37,12 @@ if (process.env.FRONTEND_URL) {
   allowedOrigins.push(process.env.FRONTEND_URL);
 }
 
-// Configuração de CORS temporariamente mais permissiva para debug
+// Configuração de CORS liberada para qualquer origem
 app.use(cors({
-  origin: true, // Permitir todas as origens temporariamente
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  origin: '*', // Permitir qualquer origem
+  credentials: false, // Desabilitar credentials para wildcard
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin']
 }));
 
 // Rate limiting global
