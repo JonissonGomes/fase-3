@@ -1,0 +1,30 @@
+{
+  "name": "fase-3-monorepo",
+  "version": "1.0.0",
+  "description": "Plataforma de revenda de veículos com arquitetura de microserviços",
+  "private": true,
+  "workspaces": [
+    "services/*",
+    "frontend/*"
+  ],
+  "scripts": {
+    "dev": "echo 'Use make dev para desenvolvimento local'",
+    "build": "echo 'Build será feito individualmente por cada serviço'",
+    "start": "echo 'Start será feito individualmente por cada serviço'",
+    "test": "echo 'Testes serão executados individualmente por cada serviço'"
+  },
+  "keywords": [
+    "microservices",
+    "nodejs",
+    "mongodb",
+    "react",
+    "revenda",
+    "veiculos"
+  ],
+  "author": "Fase 3 Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+} 
