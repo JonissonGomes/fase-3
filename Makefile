@@ -389,4 +389,39 @@ frontend: ## Setup completo do frontend (instala + build)
 	@echo "$(BLUE)🎨 Setup completo do frontend...$(NC)"
 	@$(MAKE) frontend-install
 	@$(MAKE) frontend-build
-	@echo "$(GREEN)✅ Frontend configurado$(NC)" 
+	@echo "$(GREEN)✅ Frontend configurado$(NC)"
+
+# Comandos de Deploy na Vercel
+vercel-setup: ## Configura deploy na Vercel
+	@echo "$(BLUE)🌐 Configurando deploy na Vercel...$(NC)"
+	@if [ ! -f "vercel.json" ]; then \
+		echo "$(RED)❌ vercel.json não encontrado$(NC)"; \
+		exit 1; \
+	fi
+	@if [ ! -f ".vercelignore" ]; then \
+		echo "$(RED)❌ .vercelignore não encontrado$(NC)"; \
+		exit 1; \
+	fi
+	@echo "$(GREEN)✅ Configuração da Vercel verificada$(NC)"
+	@echo "$(YELLOW)📋 Para conectar o repositório:$(NC)"
+	@echo "$(YELLOW)   1. Acesse https://vercel.com/new$(NC)"
+	@echo "$(YELLOW)   2. Conecte este repositório$(NC)"
+	@echo "$(YELLOW)   3. O build será automático$(NC)"
+
+vercel-deploy: ## Deploy manual na Vercel
+	@echo "$(BLUE)🚀 Deploy na Vercel...$(NC)"
+	@./scripts/deploy-vercel.sh
+
+vercel-build: ## Build para Vercel (sem deploy)
+	@echo "$(BLUE)🏗️ Build para Vercel...$(NC)"
+	@$(MAKE) frontend-build
+	@echo "$(GREEN)✅ Build pronto para deploy na Vercel$(NC)"
+
+vercel-status: ## Status do projeto na Vercel
+	@echo "$(BLUE)📊 Status do projeto na Vercel...$(NC)"
+	@if command -v vercel &> /dev/null; then \
+		vercel ls; \
+	else \
+		echo "$(YELLOW)⚠️  Vercel CLI não instalado$(NC)"; \
+		echo "$(YELLOW)   Execute: npm install -g vercel$(NC)"; \
+	fi 

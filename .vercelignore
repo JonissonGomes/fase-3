@@ -1,0 +1,12 @@
+# Ignorar tudo exceto o frontend
+services/
+docs/
+scripts/
+tests/
+infrastructure/
+*.md
+Makefile
+docker-compose*.yml
+env.*
+.git/
+node_modules/ 

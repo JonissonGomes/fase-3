@@ -205,17 +205,37 @@ make prod-deploy
 ```
 
 #### 2. Deploy Backend no Render + Frontend na Vercel (Recomendado)
-```bash
-# Backend (Render)
-./scripts/setup-render.sh
 
-# Frontend (Vercel)
-cd frontend
-npm install
-npm run build
-# 1. Conecte o repositório na Vercel
-# 2. Configure o diretório frontend/
-# 3. Configure variáveis de ambiente
+**Backend (Render):**
+```bash
+# Deploy dos microserviços
+./scripts/setup-render.sh
+```
+
+**Frontend (Vercel):**
+O projeto está configurado para deploy automático na Vercel:
+
+```bash
+# 1. Conectar repositório na Vercel
+# 2. O build será automático com as configurações:
+#    - Build Command: cd frontend && npm install && npm run build
+#    - Output Directory: frontend/dist
+#    - Framework: Vite
+
+# 3. Variáveis de ambiente configuradas automaticamente:
+VITE_AUTH_SERVICE_URL=https://fase-3-auth-service.onrender.com
+VITE_VEHICLES_SERVICE_URL=https://fase-3-vehicles-service.onrender.com
+VITE_ORDERS_SERVICE_URL=https://fase-3-orders-service.onrender.com
+```
+
+**Deploy Manual via CLI:**
+```bash
+# Instalar Vercel CLI
+npm i -g vercel
+
+# Login e deploy
+vercel login
+vercel --prod
 ```
 
 #### 3. Deploy em Outras Clouds

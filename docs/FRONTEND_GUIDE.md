@@ -125,6 +125,64 @@ make frontend-lint       # Executar linting
 make frontend-clean      # Limpar build
 ```
 
+## 🌐 Deploy na Vercel
+
+### Configuração Automática
+O projeto está configurado para deploy automático na Vercel com as seguintes configurações:
+
+#### Arquivos de Configuração
+- **`vercel.json`** (raiz): Configuração principal do deploy
+- **`.vercelignore`**: Arquivos ignorados no build
+
+#### Configuração do Build
+```json
+{
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/dist",
+  "installCommand": "cd frontend && npm install",
+  "framework": "vite"
+}
+```
+
+### Deploy Manual
+```bash
+# 1. Instalar Vercel CLI
+npm i -g vercel
+
+# 2. Fazer login na Vercel
+vercel login
+
+# 3. Deploy do projeto
+vercel
+
+# 4. Para produção
+vercel --prod
+```
+
+### Deploy via GitHub
+1. **Conectar repositório** na Vercel
+2. **Configurar build settings**:
+   - Framework Preset: Vite
+   - Build Command: `cd frontend && npm install && npm run build`
+   - Output Directory: `frontend/dist`
+   - Install Command: `cd frontend && npm install`
+
+3. **Variáveis de Ambiente** (configuradas automaticamente):
+   ```env
+   VITE_AUTH_SERVICE_URL=https://fase-3-auth-service.onrender.com
+   VITE_VEHICLES_SERVICE_URL=https://fase-3-vehicles-service.onrender.com
+   VITE_ORDERS_SERVICE_URL=https://fase-3-orders-service.onrender.com
+   ```
+
+### URLs de Deploy
+- **Preview**: `https://[project-name]-[hash].vercel.app`
+- **Produção**: `https://[project-name].vercel.app`
+
+### Monitoramento
+- **Build Logs**: Acessíveis via dashboard da Vercel
+- **Performance**: Analytics automáticos
+- **Uptime**: Monitoramento de disponibilidade
+
 ## 🔧 Configuração
 
 ### Variáveis de Ambiente
