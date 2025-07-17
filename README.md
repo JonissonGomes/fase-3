@@ -238,6 +238,20 @@ vercel login
 vercel --prod
 ```
 
+**Troubleshooting:**
+Se encontrar problemas durante o deploy, consulte o [guia de troubleshooting](docs/VERCEL_TROUBLESHOOTING.md) ou use os comandos:
+
+```bash
+# Verificar build local
+make frontend-build
+
+# Deploy com script automatizado
+make vercel-deploy
+
+# Verificar status
+make vercel-status
+```
+
 #### 3. Deploy em Outras Clouds
 - **Railway**: Similar ao Render, suporte a monorepo
 - **Heroku**: Deploy dos microserviços com MongoDB Atlas
@@ -259,6 +273,7 @@ vercel --prod
 ### 📚 Documentação Completa:
 - [Deploy no Render](docs/DEPLOY_RENDER.md) - Backend (microserviços)
 - [Deploy na Vercel](docs/DEPLOY_VERCEL.md) - Frontend (React/Vue)
+- [Troubleshooting Vercel](docs/VERCEL_TROUBLESHOOTING.md) - Solução de problemas
 - [Preparação para Publicação](docs/PREPARACAO_PUBLICACAO.md)
 - [API Documentation](docs/API.md)
 - [Guia de Instalação](INSTALACAO.md)
