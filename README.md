@@ -242,6 +242,9 @@ vercel --prod
 Se encontrar problemas durante o deploy, consulte o [guia de troubleshooting](docs/VERCEL_TROUBLESHOOTING.md) ou use os comandos:
 
 ```bash
+# Testar configuração antes do deploy
+make vercel-test
+
 # Verificar build local
 make frontend-build
 

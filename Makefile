@@ -424,4 +424,8 @@ vercel-status: ## Status do projeto na Vercel
 	else \
 		echo "$(YELLOW)⚠️  Vercel CLI não instalado$(NC)"; \
 		echo "$(YELLOW)   Execute: npm install -g vercel$(NC)"; \
-	fi 
+	fi
+
+vercel-test: ## Testa configuração do Vercel
+	@echo "$(BLUE)🧪 Testando configuração do Vercel...$(NC)"
+	@./scripts/test-vercel-config.sh 
